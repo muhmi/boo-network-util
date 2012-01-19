@@ -72,7 +72,7 @@ class ReceivingTcpClient(TcpClient):
 		super(sock, _Id)
 
 		_listener = listener
-		
+
 		if _listener != null :
 			_listener.Connected(self)
 

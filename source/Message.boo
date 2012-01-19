@@ -1,6 +1,7 @@
 namespace NetworkUtil
 
-import System.IO;
+import System.IO
+import System.Runtime.Serialization.Formatters.Binary
 
 enum MessageValueType:
 	Int = 1
@@ -11,25 +12,9 @@ static class Message:
 
 	def Encode(msg as Hash):
 
-		using stream = MemoryStream(), writer = BinaryWriter(stream):
+		using stream = MemoryStream(), formatter = BinaryFormatter():
 
-			writer.Write(msg.Count cast int)
-
-			for item in msg:
-
-				writer.Write(item.Key as string)
-
-				if item.Value isa int:
-					writer.Write(MessageValueType.Int cast int)
-					writer.Write(item.Value cast int)
-				elif item.Value isa string or item.Value isa System.String:
-					writer.Write(MessageValueType.Str cast int)
-					writer.Write(item.Value as string)
-				elif item.Value isa bool:
-					writer.Write(MessageValueType.Bool cast int)
-					writer.Write(item.Value cast bool)
-				else:
-					raise "Type: " + item.Value.GetType() + " is not supported!"
+			formatter.Serialize(stream, msg)
 
 			return stream.ToArray()
 
@@ -38,25 +23,9 @@ static class Message:
 
 	def Decode(msg as (byte), off as int, length as int):
 
-		using reader = BinaryReader(MemoryStream(msg, 0, length)):
-
-			items = reader.ReadInt32()
-
-			bag = {}
-
-			for i in range(0, items):
-
-				key = reader.ReadString()
-				typ = reader.ReadInt32()
-
-				if typ == MessageValueType.Int:
-					bag[key] = reader.ReadInt32()
-				elif typ == MessageValueType.Str:
-					bag[key] = reader.ReadString()
-				elif typ == MessageValueType.Bool:
-					bag[key] = reader.ReadBoolean()
-				else:
-					raise "Message value type " + typ + " is not supported!"
+		using stream = MemoryStream(msg, 0, length), formatter = BinaryFormatter():
+			
+			bag = formatter.Deserialize(stream) cast Hash
 
 			return bag
 

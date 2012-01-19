@@ -4,8 +4,7 @@ import System.IO;
 
 
 static class Packet:
-	
-	
+
 	def Wrap(bytes as (byte)):
 		using stream = MemoryStream(), writer = BinaryWriter(stream):
 			writer.Write(bytes.Length cast int)
@@ -14,12 +13,12 @@ static class Packet:
 
 	def UnWrap(stream as MemoryStream):
 		using reader = BinaryReader(stream):
-			
+
 			size = reader.ReadInt32()
-			
+
 			if reader.BaseStream.Position + reader.BaseStream.Length < size:
 				return null
-			
+
 			return reader.ReadBytes(size)
 
 	def UnWrap(bytes as (byte)):
