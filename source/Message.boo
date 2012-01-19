@@ -31,8 +31,6 @@ static class Message:
 				else:
 					raise "Type: " + item.Value.GetType() + " is not supported!"
 
-			writer.Close()
-
 			return stream.ToArray()
 
 	def Decode(msg as (byte)):

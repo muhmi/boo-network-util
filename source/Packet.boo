@@ -10,11 +10,9 @@ static class Packet:
 		using stream = MemoryStream(), writer = BinaryWriter(stream):
 			writer.Write(bytes.Length cast int)
 			writer.Write(bytes, 0, bytes.Length)
-			writer.Close()
 			return stream.ToArray()
 
 	def UnWrap(stream as MemoryStream):
-		
 		using reader = BinaryReader(stream):
 			
 			size = reader.ReadInt32()
@@ -26,5 +24,8 @@ static class Packet:
 
 	def UnWrap(bytes as (byte)):
 		using stream = MemoryStream(bytes):
-			stream.Position = 0
+			return UnWrap(stream)
+
+	def UnWrap(bytes as (byte), off as int, length as int):
+		using stream = MemoryStream(bytes, off, length):
 			return UnWrap(stream)
