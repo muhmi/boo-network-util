@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<project name="TestServer" default="build">
+	<target name="build">
+		<mkdir dir="bin" />
+		<booc output="bin/server.exe" target="executable">
+<!--		<references basedir="bin">
+		<include name="System.Data.dll" />
+		</references>-->
+			<sources>
+				<include name="source/**/*.boo"/>
+			</sources>
+		</booc>
+	</target>
+</project>
